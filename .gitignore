@@ -1,2 +1,6 @@
 /venv
 /logs
+/artifacts
+/raw_datasets
+.env
+RAWREADME.md

@@ -20,3 +20,4 @@ uvicorn
 Jinja2
 evaluate
 mlflow
+ipykernel

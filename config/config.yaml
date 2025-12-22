@@ -1,0 +1,6 @@
+artifacts_root: artifacts
+
+data_preprocessing:
+  root_dir: artifacts/data/processed
+  : artifacts/data/processed/slsa
+  : artifacts/data/processed/absa
