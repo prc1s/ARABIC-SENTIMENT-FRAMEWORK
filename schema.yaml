@@ -1,0 +1,10 @@
+slsa:
+  columns:
+    label:
+      name: label
+
+    text:
+      name: text
+  
+  target_column:
+    name: label

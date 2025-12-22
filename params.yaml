@@ -1,0 +1,6 @@
+data_preprocessing:
+  slsa:
+    seed: 42
+    test_ratio: 0.10
+    dev_ratio: 0.10
+    small_n: 3000

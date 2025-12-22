@@ -2,5 +2,15 @@ artifacts_root: artifacts
 
 data_preprocessing:
   root_dir: artifacts/data/processed
-  : artifacts/data/processed/slsa
-  : artifacts/data/processed/absa
+  slsa_data_local_path: raw_datasets/ar_reviews_100k.tsv
+  absa_data_train_local_path: raw_datasets/SemEval2016_arabic/SemEval2016_arabic/AR_Hotels_Train_SB2.xml
+  absa_data_test_local_path: raw_datasets/SemEval2016_arabic/SemEval2016_arabic/AR_HOTE_SB2_TEST.xml
+  absa_data_test_gold_local_path: raw_datasets/SemEval2016_arabic/SemEval2016_arabic/AR_HOTE_SB2_TEST.xml.gold
+  save_train_full_slsa_data: artifacts/data/processed/slsa/slsa_train_big.jsonl
+  save_train_full_absa_data: artifacts/data/processed/absa/absa_train_big.jsonl
+  save_train_small_slsa_data: artifacts/data/processed/slsa/slsa_train_small.jsonl
+  save_train_small_absa_data: artifacts/data/processed/absa/absa_train_small.jsonl
+  save_dev_slsa_data: artifacts/data/processed/slsa/slsa_dev.jsonl
+  save_dev_absa_data: artifacts/data/processed/abs/absa_dev.jsonl
+  save_test_slsa_data: artifacts/data/processed/slsa/slsa_test.jsonl
+  save_test_absa_data: artifacts/data/processed/abs/absa_test.jsonl
