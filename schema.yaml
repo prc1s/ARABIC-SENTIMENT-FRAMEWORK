@@ -5,6 +5,11 @@ slsa:
 
     text:
       name: text
-  
-  target_column:
-    name: label
+
+absa:
+  columns:
+    labels:
+      name: labels
+    
+    text:
+      name: text

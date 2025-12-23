@@ -4,3 +4,5 @@ data_preprocessing:
     test_ratio: 0.10
     dev_ratio: 0.10
     small_n: 3000
+  absa:
+    dev_ratio: 0.15
