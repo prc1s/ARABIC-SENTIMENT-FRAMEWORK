@@ -20,4 +20,5 @@ uvicorn
 Jinja2
 evaluate
 mlflow
+accelerate
 ipykernel

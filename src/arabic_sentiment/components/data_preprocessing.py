@@ -12,7 +12,7 @@ class DataPreprocessing:
     def slsa_dataset_transform(self, source:Path):
         try:
             logger.info("Initiated slsa dataset transformation")
-            source_slsa = self.config.slsa_data_local_path
+            source_slsa = source
             df = pd.read_csv(source_slsa, sep="\t", dtype=str)
             shuffled_df = df.sample(n=len(df))
             shuffled_df = shuffled_df[0:30001]
@@ -45,6 +45,7 @@ class DataPreprocessing:
             )
 
             train_small_df = train_big_df.sample(n=self.config.slsa_small_n, random_state=SEED, replace=False)
+            train_big_df = train_big_df.sample(len(train_big_df))
             logger.info("slsa dataset split completed")
             return train_big_df, train_small_df, test_df, dev_df
         except Exception as e:
@@ -66,7 +67,7 @@ class DataPreprocessing:
         try:
             logger.info(f"slsa dataset preprocessing initiated")
             source_slsa = self.config.slsa_data_local_path
-            df = self.slsa_dataset_transform(source_slsa)
+            df = self.slsa_dataset_transform(Path(source_slsa))
             train_big_df, train_small_df, test_df, dev_df = self.slsa_train_dev_test_split(df)
             LABEL_COL = self.config.slsa_label_column
             TEXT_COL = self.config.slsa_text_column
