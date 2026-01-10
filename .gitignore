@@ -5,3 +5,4 @@
 .env
 RAWREADME.md
 /model
+/mlflow_runs
