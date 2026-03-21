@@ -74,14 +74,6 @@ Aspect-based sentiment analysis over Arabic hotel reviews from SemEval 2016 Task
 }
 ```
 
-- Current processed splits:
-
-| Split | Reviews | Aspect-polarity pairs | Avg. labels/review |
-| --- | ---: | ---: | ---: |
-| `absa_train_big.jsonl` | 1564 | 7635 | 4.882 |
-| `absa_dev.jsonl` | 275 | 1122 | 4.080 |
-| `absa_test.jsonl` | 452 | 2158 | 4.774 |
-
 - Polarity distribution in saved processed data is imbalanced toward `positive`, with `conflict` very rare.
 - The current preprocessing code creates the ABSA train/dev split with a fixed seed from `params.yaml`, so rerunning preprocessing reproduces the same partition.
 
@@ -139,7 +131,7 @@ The notebook numbering tells the story of the project:
 The saved MLflow experiment is `slsa_allam_lora_hpt` under `mlflow_runs/928368689365027864/` and contains 16 tracked runs.
 
 ## Results Snapshot
-
+# FIND ALL ARTIFACTS INCLUDING ADAPTERS,CHECKPOINTS,ETC CAN BE FOUND HERE: https://drive.google.com/drive/folders/1obWpjG4kllEfCg2QRs_GL1sOQvG9qIWx?usp=sharing
 All numbers below are copied from the JSON artifacts under `artifacts/results/`.
 
 ### SLSA
@@ -182,12 +174,12 @@ Takeaways:
 
 ### Conditioned ABSA
 
-Generative and encoder results should be compared carefully. The saved conditioned ABSA artifacts do not all use the same `n`:
+All conditioned ABSA experiments use the same 452-review test split. The saved conditioned ABSA artifacts differ only in how that same test set is logged:
 
 - prompt/RAG/ALLAM LoRA result files report `n = 452`
-- mBERT/AraBERT result files report `n = 2158`
+- mBERT/AraBERT result files first expand those 452 reviews into one row per aspect-polarity instance, which produces `2158` expanded rows in the saved artifact
 
-That strongly suggests different evaluation granularities across method families.
+This is not a different test set. For conditioned ABSA, the real test-set size is always `452` reviews; `2158` is just the expanded aspect-level row count created when the encoder notebooks separate each review into multiple aspect examples.
 
 #### Generative runs
 
@@ -201,10 +193,10 @@ That strongly suggests different evaluation granularities across method families
 
 #### Encoder runs
 
-| Family | Run | Accuracy | Macro-F1 | `n` |
-| --- | --- | ---: | ---: | ---: |
-| mBERT | Saved test run | 0.8443 | 0.4353 | 2158 |
-| AraBERT | Saved test run | 0.8438 | 0.4737 | 2158 |
+| Family | Run | Accuracy | Macro-F1 | Test Reviews | Expanded Aspect Rows |
+| --- | --- | ---: | ---: | ---: | ---: |
+| mBERT | Saved test run | 0.8443 | 0.4353 | 452 | 2158 |
+| AraBERT | Saved test run | 0.8438 | 0.4737 | 452 | 2158 |
 
 Takeaways:
 
@@ -212,6 +204,7 @@ Takeaways:
 - Five-shot prompting improves over zero-shot for conditioned ABSA, but not enough to catch LoRA.
 - The notebook notes also conclude that RAG adds little benefit here and can hurt because of retrieval noise or leakage.
 - `AraBERT` is the strongest saved encoder baseline for conditioned ABSA.
+- When reading the saved encoder JSON files, treat `2158` as the number of expanded aspect-level evaluation rows, not the number of ABSA test reviews.
 
 ## Overall Analysis
 
@@ -291,16 +284,3 @@ A reasonable local path mapping is:
 - `drive/MyDrive/FYP/ALLAM-7B` -> `model/ALLAM-7B`
 - `drive/MyDrive/FYP/slsa/...` -> `artifacts/results/slsa_results/...`
 - `drive/MyDrive/FYP/absa/...` -> `artifacts/results/absa_results/...`
-
-## Reproducibility And Caveats
-
-- SLSA and ABSA preprocessing now use fixed seeds from `params.yaml`, so rerunning `python main.py` reproduces the same processed splits.
-- The saved processed artifacts will differ from older versions of this repository because ABSA now uses a seeded randomized train/dev split instead of the previous first-slice split.
-- Several result files are directly comparable only within their own evaluation family because the logged `n` differs across methods.
-- The repo is strongest as a research archive and experiment log. Training, inference, and evaluation logic outside preprocessing still lives mostly in notebooks.
-
-## Suggested Next Cleanup Steps
-
-- Move the training and evaluation logic from notebooks into scripts or modules.
-- Pin dependencies more tightly and add missing packages to `requirements.txt`.
-- Standardize conditioned ABSA evaluation so every method logs metrics at the same unit of analysis.
