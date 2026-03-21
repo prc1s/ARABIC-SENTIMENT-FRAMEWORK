@@ -83,7 +83,7 @@ Aspect-based sentiment analysis over Arabic hotel reviews from SemEval 2016 Task
 | `absa_test.jsonl` | 452 | 2158 | 4.774 |
 
 - Polarity distribution in saved processed data is imbalanced toward `positive`, with `conflict` very rare.
-- The current preprocessing code creates the ABSA dev split as the first `15%` of training reviews without shuffling or stratification.
+- The current preprocessing code creates the ABSA train/dev split with a fixed seed from `params.yaml`, so rerunning preprocessing reproduces the same partition.
 
 ### Other Raw Files Present
 
@@ -294,8 +294,8 @@ A reasonable local path mapping is:
 
 ## Reproducibility And Caveats
 
-- SLSA preprocessing is not fully deterministic right now. `slsa_dataset_transform()` shuffles with `df.sample(n=len(df))` without a fixed `random_state`, so rerunning preprocessing changes which reviews land in each saved split.
-- ABSA dev creation is a simple first-slice split rather than a shuffled or stratified split.
+- SLSA and ABSA preprocessing now use fixed seeds from `params.yaml`, so rerunning `python main.py` reproduces the same processed splits.
+- The saved processed artifacts will differ from older versions of this repository because ABSA now uses a seeded randomized train/dev split instead of the previous first-slice split.
 - Several result files are directly comparable only within their own evaluation family because the logged `n` differs across methods.
 - The repo is strongest as a research archive and experiment log. Training, inference, and evaluation logic outside preprocessing still lives mostly in notebooks.
 
@@ -303,6 +303,4 @@ A reasonable local path mapping is:
 
 - Move the training and evaluation logic from notebooks into scripts or modules.
 - Pin dependencies more tightly and add missing packages to `requirements.txt`.
-- Make preprocessing deterministic.
 - Standardize conditioned ABSA evaluation so every method logs metrics at the same unit of analysis.
-

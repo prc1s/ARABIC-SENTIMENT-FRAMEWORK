@@ -15,8 +15,9 @@ class DataPreprocessingConfig:
     save_test_absa_data: Path
     slsa_label_column: str
     slsa_text_column: str
-    slsa_seed: float
+    slsa_seed: int
     slsa_test_ratio: float
     slsa_dev_ratio: float
-    slsa_small_n: float
+    slsa_small_n: int
+    absa_seed: int
     absa_dev_ratio: float

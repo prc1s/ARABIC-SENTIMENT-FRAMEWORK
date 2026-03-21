@@ -5,4 +5,5 @@ data_preprocessing:
     dev_ratio: 0.10
     small_n: 3000
   absa:
+    seed: 42
     dev_ratio: 0.15

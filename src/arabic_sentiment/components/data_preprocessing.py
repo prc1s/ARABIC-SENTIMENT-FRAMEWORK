@@ -14,8 +14,8 @@ class DataPreprocessing:
             logger.info("Initiated slsa dataset transformation")
             source_slsa = source
             df = pd.read_csv(source_slsa, sep="\t", dtype=str)
-            shuffled_df = df.sample(n=len(df))
-            shuffled_df = shuffled_df[0:30001]
+            shuffled_df = df.sample(frac=1, random_state=self.config.slsa_seed).reset_index(drop=True)
+            shuffled_df = shuffled_df.iloc[:30001].copy()
             logger.info("slsa dataset transformation completed")
             return shuffled_df
         except Exception as e:
@@ -45,7 +45,10 @@ class DataPreprocessing:
             )
 
             train_small_df = train_big_df.sample(n=self.config.slsa_small_n, random_state=SEED, replace=False)
-            train_big_df = train_big_df.sample(len(train_big_df))
+            train_big_df = train_big_df.reset_index(drop=True)
+            train_small_df = train_small_df.reset_index(drop=True)
+            dev_df = dev_df.reset_index(drop=True)
+            test_df = test_df.reset_index(drop=True)
             logger.info("slsa dataset split completed")
             return train_big_df, train_small_df, test_df, dev_df
         except Exception as e:
@@ -129,13 +132,15 @@ class DataPreprocessing:
         except Exception as e:
             raise(e)
     
-    def absa_train_dev_split(self,rows, dev_ratio):
+    def absa_train_dev_split(self, rows, dev_ratio):
         try:
             logger.info("Initiated absa dataset split")
-            n = len(rows)
-            n_dev = int(n * dev_ratio)
-            dev = rows[:n_dev]        
-            train = rows[n_dev:]
+            train, dev = train_test_split(
+                rows,
+                test_size=dev_ratio,
+                random_state=self.config.absa_seed,
+                shuffle=True
+            )
             logger.info("absa dataset split completed")
             return train, dev
         except Exception as e:

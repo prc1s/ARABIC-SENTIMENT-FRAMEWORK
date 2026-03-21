@@ -32,6 +32,7 @@ class ConfigurationManager:
             slsa_test_ratio= params.slsa.test_ratio,
             slsa_dev_ratio= params.slsa.dev_ratio,
             slsa_small_n= params.slsa.small_n,
+            absa_seed= params.absa.seed,
             absa_dev_ratio= params.absa.dev_ratio
         )
         return data_preprocessing_config
