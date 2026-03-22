@@ -2,7 +2,6 @@ from src.arabic_sentiment.pipeline.data_preprocessing_pipeline import DataPrepro
 from src.arabic_sentiment.logging import logger
 def main():
     try:
-        #DATA PREPROCESSING
         data_preprocessing_pipeline = DataPreprocessingPipeline()
         data_preprocessing_pipeline.initiate_data_preprocessing()
 
