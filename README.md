@@ -27,7 +27,8 @@ Most of the actual experimentation lives in notebooks. The code under `src/` cur
 - `artifacts/analysis/raw/`: saved raw text logs from SLSA prompt-engineering and PEFT runs
 - `artifacts/analysis/preprocessed/`: cleaned JSON extracted from those raw logs for downstream analysis
 - `model/ALLAM-7B/`: local checkpoint files for the generative model
-- `mlflow_runs/` and `mlflow.db`: local tracking artifacts for SLSA LoRA tuning
+- `mlflow_runs/` : local tracking artifacts for SLSA LoRA tuning to run it execute
+                    - mlflow ui  --backend-store-uri mlflow_runs --port 5050
 
 This repository is notebook- and script-driven; there is no packaged application or service entrypoint in the current tree.
 
