@@ -14,20 +14,22 @@ The repo combines:
 - lightweight retrieval-augmented generation (RAG)
 - encoder baselines with mBERT and AraBERT
 
-Most of the actual experimentation lives in notebooks. The code under `src/` currently covers preprocessing only.
+Most of the actual experimentation lives in notebooks. The code under `src/` currently covers data preprocessing plus post-processing utilities for raw SLSA experiment logs.
 
 ## What Is In The Repo
 
-- `src/arabic_sentiment/...`: modular preprocessing code and config loading
+- `src/arabic_sentiment/...`: modular dataset preprocessing, config loading, and raw-output cleanup utilities
 - `main.py`: runs preprocessing end to end
 - `config/config.yaml`, `params.yaml`, `schema.yaml`: dataset paths, split parameters, and schema definitions
-- `notebooks/`: the full research workflow, ordered roughly by stage
+- `notebooks/`: the full research workflow, now grouped by stage (`preprocessing/`, `prompt_engineering/`, `peft/`, `rag/`, `mbert/`, `arabert/`)
 - `artifacts/data/processed/`: generated JSONL datasets
 - `artifacts/results/`: saved evaluation outputs
+- `artifacts/analysis/raw/`: saved raw text logs from SLSA prompt-engineering and PEFT runs
+- `artifacts/analysis/preprocessed/`: cleaned JSON extracted from those raw logs for downstream analysis
 - `model/ALLAM-7B/`: local checkpoint files for the generative model
 - `mlflow_runs/` and `mlflow.db`: local tracking artifacts for SLSA LoRA tuning
 
-`app.py` is currently empty, so this is not yet a packaged application or service.
+This repository is notebook- and script-driven; there is no packaged application or service entrypoint in the current tree.
 
 ## Tasks And Datasets
 
@@ -91,41 +93,41 @@ These are useful context for future work, but they are not wired into `config/co
 
 The notebook numbering tells the story of the project:
 
-- `0.0_raw_data_inspection.ipynb`
+- `notebooks/preprocessing/0.0_raw_data_inspection.ipynb`
   - initial raw-data inspection
-- `1.0_data_preprocessing.ipynb`
+- `notebooks/preprocessing/1.0_data_preprocessing.ipynb`
   - early preprocessing work
-- `1.1_modularisation.ipynb`
+- `notebooks/preprocessing/1.1_modularisation.ipynb`
   - moves preprocessing into `src/`
-- `2.0_allam_prompt_engineering_slsa.ipynb`
+- `notebooks/prompt_engineering/2.0_allam_prompt_engineering_slsa.ipynb`
   - prompt-engineering baseline for SLSA
-- `2.1_prompt_engineering_unconditioned_absa.ipynb`
+- `notebooks/prompt_engineering/2.1_prompt_engineering_unconditioned_absa.ipynb`
   - prompt-engineering baseline for unconditioned ABSA
-- `2.2_prompt_engineering_conditioned_absa.ipynb`
+- `notebooks/prompt_engineering/2.2_prompt_engineering_conditioned_absa.ipynb`
   - conditioned ABSA prompt setup
-- `3.0_hyperparameter_tunning_slsa.ipynb`
+- `notebooks/peft/3.0_hyperparameter_tunning_slsa.ipynb`
   - LoRA hyperparameter tuning for SLSA with MLflow
-- `3.1_slsa_small_train_peft.ipynb`
+- `notebooks/peft/3.1_slsa_small_train_peft.ipynb`
   - LoRA fine-tuning on small SLSA train split
-- `3.2_slsa_big_train_peft.ipynb`
+- `notebooks/peft/3.2_slsa_big_train_peft.ipynb`
   - LoRA fine-tuning on big SLSA train split
-- `3.3_unconditioned_absa_peft.ipynb`
+- `notebooks/peft/3.3_unconditioned_absa_peft.ipynb`
   - LoRA fine-tuning for unconditioned ABSA
-- `3.4_conditioned_absa_peft.ipynb`
+- `notebooks/peft/3.4_conditioned_absa_peft.ipynb`
   - LoRA fine-tuning for conditioned ABSA
-- `4.0_rag_slsa_train_big.ipynb`
+- `notebooks/rag/4.0_rag_slsa_train_big.ipynb`
   - RAG for SLSA using the big train split
-- `4.1_rag_slsa_train_small.ipynb`
+- `notebooks/rag/4.1_rag_slsa_train_small.ipynb`
   - RAG for SLSA using the small train split
-- `4.2_rag_absa.ipynb`
+- `notebooks/rag/4.2_rag_unconditioned_absa.ipynb`
   - RAG for unconditioned ABSA
-- `4.3_rag_conditioned_absa.ipynb`
+- `notebooks/rag/4.3_rag_conditioned_absa.ipynb`
   - RAG for conditioned ABSA
-- `5.1_rag_with_fine_tuned_model_absa.ipynb`
+- `notebooks/rag/5.1_rag_with_fine_tuned_model_absa.ipynb`
   - hybrid retrieval plus fine-tuned model for ABSA
-- `6.0.0` to `6.0.3`
+- `notebooks/mbert/6.0.0` to `notebooks/mbert/6.0.3`
   - mBERT baselines for SLSA, unconditioned ABSA, and conditioned ABSA
-- `6.1.0` to `6.1.3`
+- `notebooks/arabert/6.1.0` to `notebooks/arabert/6.1.3`
   - AraBERT baselines for SLSA, unconditioned ABSA, and conditioned ABSA
 
 The saved MLflow experiment is `slsa_allam_lora_hpt` under `mlflow_runs/928368689365027864/` and contains 16 tracked runs.
@@ -226,10 +228,14 @@ The modular code path is small and easy to trace:
   - defines the dataclass passed into preprocessing
 - `src/arabic_sentiment/components/data_preprocessing.py`
   - transforms the SLSA TSV and SemEval XML into JSONL files
+- `src/arabic_sentiment/components/2.0_preprocessing_raw_slsa_prompt_engineering_output_logs.py`
+  - parses raw SLSA prompt-engineering logs into structured JSON under `artifacts/analysis/preprocessed/2.0_prompt_engineering/`
+- `src/arabic_sentiment/components/3_preprocessing_raw_slsa_peft_outputs.py`
+  - parses raw SLSA PEFT logs into structured JSON under `artifacts/analysis/preprocessed/3_slsa_peft/`
 - `src/arabic_sentiment/pipeline/data_preprocessing_pipeline.py`
   - wires config to the component
 - `main.py`
-  - runs the pipeline
+  - runs the dataset preprocessing pipeline
 
 ## Setup
 
@@ -278,9 +284,23 @@ Important notes before running them:
 - If you want to run locally, replace those paths with this repository's local paths.
 - The local ALLAM checkpoint already present in this repo is `model/ALLAM-7B/`.
 - Results are already organized under `artifacts/results/slsa_results/` and `artifacts/results/absa_results/`.
+- Raw generation logs and cleaned analysis files from newer SLSA experiments live under `artifacts/analysis/raw/` and `artifacts/analysis/preprocessed/`.
 
 A reasonable local path mapping is:
 
 - `drive/MyDrive/FYP/ALLAM-7B` -> `model/ALLAM-7B`
 - `drive/MyDrive/FYP/slsa/...` -> `artifacts/results/slsa_results/...`
 - `drive/MyDrive/FYP/absa/...` -> `artifacts/results/absa_results/...`
+
+## Preprocess Raw Experiment Logs
+
+Two standalone scripts under `src/arabic_sentiment/components/` convert saved raw SLSA outputs into analysis-ready JSON:
+
+- `python src/arabic_sentiment/components/2.0_preprocessing_raw_slsa_prompt_engineering_output_logs.py`
+  - reads `artifacts/analysis/raw/2.0_*Shot_raw_outputs.txt`
+  - writes cleaned files under `artifacts/analysis/preprocessed/2.0_prompt_engineering/`
+- `python src/arabic_sentiment/components/3_preprocessing_raw_slsa_peft_outputs.py`
+  - reads `artifacts/analysis/raw/3.1_raw_outputs.txt` and `artifacts/analysis/raw/3.2_raw_outputs.txt`
+  - writes cleaned files under `artifacts/analysis/preprocessed/3_slsa_peft/`
+
+These utilities are separate from `main.py`; they post-process already-generated experiment logs rather than rebuild the core datasets.
