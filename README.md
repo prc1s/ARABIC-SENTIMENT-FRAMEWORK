@@ -39,20 +39,7 @@ This repository is notebook- and script-driven; there is no packaged application
 Single-label sentiment classification over Arabic reviews.
 
 - Raw source used by the pipeline: `raw_datasets/ar_reviews_100k.tsv`
-- Processed format:
 
-```json
-{"text": "....", "label": "Positive"}
-```
-
-- Current processed splits:
-
-| Split | Size |
-| --- | ---: |
-| `slsa_train_big.jsonl` | 24000 |
-| `slsa_train_small.jsonl` | 3000 |
-| `slsa_dev.jsonl` | 3000 |
-| `slsa_test.jsonl` | 3001 |
 
 - Observed label balance is close to uniform in the saved processed files.
 - The preprocessing code shuffles the raw TSV, truncates it to `30001` rows, then performs stratified splitting.
@@ -64,18 +51,6 @@ Aspect-based sentiment analysis over Arabic hotel reviews from SemEval 2016 Task
 - Raw sources used by the pipeline:
   - `raw_datasets/SemEval2016_arabic/SemEval2016_arabic/AR_Hotels_Train_SB2.xml`
   - `raw_datasets/SemEval2016_arabic/SemEval2016_arabic/AR_HOTE_SB2_TEST.xml.gold`
-- Processed format:
-
-```json
-{
-  "rid": "336",
-  "text": "....",
-  "labels": [
-    {"category": "ROOMS#QUALITY", "polarity": "positive"},
-    {"category": "SERVICE#GENERAL", "polarity": "positive"}
-  ]
-}
-```
 
 - Polarity distribution in saved processed data is imbalanced toward `positive`, with `conflict` very rare.
 - The current preprocessing code creates the ABSA train/dev split with a fixed seed from `params.yaml`, so rerunning preprocessing reproduces the same partition.
@@ -139,17 +114,6 @@ All numbers below are copied from the JSON artifacts under `artifacts/results/`.
 
 ### SLSA
 
-| Family | Run | Accuracy | Macro-F1 | Invalid JSON |
-| --- | --- | ---: | ---: | ---: |
-| Prompting | Zero-shot | 0.4625 | 0.4449 | 26 |
-| RAG | Small train | 0.6571 | 0.6441 | 3 |
-| RAG | Big train | 0.6658 | 0.6537 | 2 |
-| mBERT | Big train | 0.7058 | 0.7076 | - |
-| AraBERT | Big train | 0.7421 | 0.7431 | - |
-| ALLAM LoRA | Big train | 0.7607 | 0.7637 | 71 |
-
-Takeaways:
-
 - The best saved SLSA run is `ALLAM LoRA` on the big train split.
 - `AraBERT` is the strongest encoder baseline.
 - Prompting is much weaker than fine-tuning on the test set.
@@ -157,18 +121,6 @@ Takeaways:
 - Increasing LoRA training data improves both classification quality and structured-output reliability. Invalid JSON drops from `375/3001` on small-train LoRA to `71/3001` on big-train LoRA.
 
 ### Unconditioned ABSA
-
-| Family | Run | Precision | Recall | Micro-F1 | Invalid JSON |
-| --- | --- | ---: | ---: | ---: | ---: |
-| Prompting | Zero-shot | 0.3668 | 0.3304 | 0.3476 | 0 |
-| Prompting | Five-shot | 0.5997 | 0.3638 | 0.4528 | 0 |
-| RAG | Retrieval baseline | 0.5542 | 0.3981 | 0.4633 | 0 |
-| mBERT pipeline | Saved test run | 0.7560 | 0.3188 | 0.4485 | - |
-| AraBERT pipeline | Saved test run | 0.7655 | 0.3207 | 0.4520 | - |
-| Hybrid | RAG + LoRA | 0.6740 | 0.6372 | 0.6551 | 0 |
-| ALLAM LoRA | Saved test run | 0.6770 | 0.6460 | 0.6611 | 1 |
-
-Takeaways:
 
 - Unconditioned ABSA is the hardest task in the repo for pure prompting.
 - Few-shot prompting helps here, unlike SLSA.
@@ -183,25 +135,6 @@ All conditioned ABSA experiments use the same 452-review test split. The saved c
 - mBERT/AraBERT result files first expand those 452 reviews into one row per aspect-polarity instance, which produces `2158` expanded rows in the saved artifact
 
 This is not a different test set. For conditioned ABSA, the real test-set size is always `452` reviews; `2158` is just the expanded aspect-level row count created when the encoder notebooks separate each review into multiple aspect examples.
-
-#### Generative runs
-
-| Family | Run | Accuracy | Macro-F1 | Invalid JSON |
-| --- | --- | ---: | ---: | ---: |
-| Prompting | Zero-shot | 0.7210 | 0.3844 | 0 |
-| Prompting | Five-shot | 0.7206 | 0.4086 | 0 |
-| RAG | 1-shot | 0.6900 | 0.3929 | 0 |
-| RAG | 3-shot | 0.5181 | 0.3275 | 0 |
-| ALLAM LoRA | Saved test run | 0.8258 | 0.4548 | 0 |
-
-#### Encoder runs
-
-| Family | Run | Accuracy | Macro-F1 | Test Reviews | Expanded Aspect Rows |
-| --- | --- | ---: | ---: | ---: | ---: |
-| mBERT | Saved test run | 0.8443 | 0.4353 | 452 | 2158 |
-| AraBERT | Saved test run | 0.8438 | 0.4737 | 452 | 2158 |
-
-Takeaways:
 
 - Within the generative family, `ALLAM LoRA` is clearly the strongest conditioned ABSA run.
 - Five-shot prompting improves over zero-shot for conditioned ABSA, but not enough to catch LoRA.

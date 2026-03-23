@@ -5,6 +5,7 @@ sacrebleu
 rouge_score 
 py7zr
 pandas
+numpy
 nltk
 tqdm
 PyYAML
@@ -22,3 +23,7 @@ evaluate
 mlflow
 accelerate
 ipykernel
+scikit-learn
+sentence-transformers
+peft
+trl
