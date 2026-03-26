@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Research showcase for an empirical comparison of generative and encoder models for Arabic sentiment analysis."
+    />
+    <title>Arabic Sentiment Analysis: What Wins, When, and Why</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="stylesheet" href="styles.css?v=20260326" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="#top">
+          <span class="brand-mark">AS</span>
+          <span class="brand-copy">
+            <strong id="brand-title">Arabic Sentiment Analysis</strong>
+            <span id="brand-subtitle">research showcase</span>
+          </span>
+        </a>
+        <div class="header-controls">
+          <nav class="site-nav" aria-label="Primary">
+            <a id="nav-overview" href="#overview">Overview</a>
+            <a id="nav-pipeline" href="#pipeline">Pipeline</a>
+            <a id="nav-models" href="#models">Models</a>
+            <a id="nav-results" href="#results">Results</a>
+            <a id="nav-findings" href="#findings">Findings</a>
+            <a id="nav-datasets" href="#datasets">Datasets</a>
+            <a id="nav-examples" href="#examples">Examples</a>
+            <a id="nav-thesis" href="#thesis">Thesis</a>
+          </nav>
+          <div class="language-switch" id="language-switch" aria-label="Language switch"></div>
+        </div>
+      </header>
+
+      <main id="top">
+        <section class="hero section" data-reveal>
+          <div class="hero-copy">
+            <p class="eyebrow" id="hero-eyebrow">Final-year research showcase</p>
+            <h1 id="hero-heading">Empirical Investigation of Generative LLM Adaptation Strategies and Supervised Encoder Models for Arabic Sentiment Analysis</h1>
+            <p class="lede" id="hero-lede">
+              Comparing Allam, mBERT, and AraBERT across sentence-level sentiment analysis, conditioned ABSA, and unconditioned ABSA under prompting, retrieval, and PEFT.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" id="hero-download" href="assets/arabic_sentiment_fyp_Final.pdf">
+                Download Thesis
+              </a>
+              <a class="button button-secondary" id="hero-results" href="#results">
+                Explore Results
+              </a>
+              <a class="button button-secondary" id="hero-examples" href="#examples">
+                View Examples
+              </a>
+            </div>
+            <div class="hero-meta">
+              <span id="hero-title"></span>
+              <span id="hero-author"></span>
+            </div>
+            <div class="stat-strip" id="hero-stats"></div>
+          </div>
+
+          <aside class="hero-panel">
+            <div class="hero-panel-header">
+              <p class="eyebrow" id="hero-panel-eyebrow">What this project shows</p>
+              <h2 id="hero-panel-heading">Three task formulations, one consistent comparison frame.</h2>
+            </div>
+            <div class="hero-panels" id="hero-panels"></div>
+          </aside>
+        </section>
+
+        <section id="overview" class="section section-grid">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow" id="overview-eyebrow">Overview</p>
+            <h2 id="overview-heading">The study in one glance.</h2>
+            <p id="overview-copy">This page turns the thesis into a live demo: clear model comparisons, real results, and a stronger narrative than a static slide deck.</p>
+          </div>
+          <div class="overview-grid">
+            <div class="card-stack" id="intro-cards" data-reveal></div>
+            <div class="question-panel" data-reveal>
+              <h3 id="questions-heading">Research questions</h3>
+              <div class="question-list" id="question-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="pipeline" class="section">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow" id="pipeline-eyebrow">Pipeline</p>
+            <h2 id="pipeline-heading">How the experiments were structured.</h2>
+            <p id="pipeline-copy">The comparison moves from datasets to task formulations to model families, keeping evaluation consistent across the whole project.</p>
+          </div>
+          <div class="timeline-grid" id="pipeline-grid"></div>
+        </section>
+
+        <section id="models" class="section">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow" id="models-eyebrow">Models</p>
+            <h2 id="models-heading">Who the models are, and why each one matters in this comparison.</h2>
+            <p id="models-copy">The site introduces the systems before the charts, so the audience can understand what each model is actually bringing to the table.</p>
+          </div>
+          <div class="model-grid" id="model-grid"></div>
+          <div class="strategy-grid" id="strategy-grid"></div>
+        </section>
+
+        <section id="results" class="section">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow" id="results-eyebrow">Results</p>
+            <h2 id="results-heading">Switch tasks and compare the strongest methods.</h2>
+            <p id="results-copy">Every score below comes from the saved experiment outputs, with the most meaningful metric foregrounded for each task.</p>
+          </div>
+
+          <div class="results-shell" data-reveal>
+            <div class="task-tabs" id="task-tabs" aria-label="Task tabs"></div>
+            <div class="results-summary">
+              <div class="results-context" id="results-context"></div>
+              <div class="regime-tabs" id="regime-tabs" aria-label="Regime tabs"></div>
+            </div>
+            <div class="results-chart" id="results-chart"></div>
+            <div class="insight-grid" id="result-insights"></div>
+          </div>
+        </section>
+
+        <section id="findings" class="section">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow" id="findings-eyebrow">Key Findings</p>
+            <h2 id="findings-heading">The strongest takeaways, pulled out of the charts.</h2>
+            <p id="findings-copy">This section foregrounds the thesis's most critical findings: low-resource encoder strength, the 3k-to-24k crossover, few-shot prompt degradation, the structural turning point in unconditioned ABSA, and reliability tradeoffs.</p>
+          </div>
+          <div class="key-finding-grid" id="key-finding-grid"></div>
+        </section>
+
+        <section id="examples" class="section">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow" id="examples-eyebrow">Examples</p>
+            <h2 id="examples-heading">Arabic task examples.</h2>
+            <p id="examples-copy">Representative Arabic inputs and output formats used in the study.</p>
+          </div>
+
+          <div class="examples-grid">
+            <div class="sample-panel" data-reveal>
+              <h3 id="sample-panel-heading">Example inputs</h3>
+              <div class="sample-grid" id="sample-grid"></div>
+            </div>
+            <div class="format-panel" data-reveal>
+              <h3 id="format-panel-heading">Task formats</h3>
+              <div class="format-grid" id="format-grid"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="datasets" class="section">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow" id="datasets-eyebrow">Datasets</p>
+            <h2 id="datasets-heading">Two datasets, three task views, very different balance profiles.</h2>
+            <p id="datasets-copy">The project deliberately spans both near-balanced sentence-level classification and highly imbalanced aspect-level prediction.</p>
+          </div>
+
+          <div class="dataset-grid" id="dataset-grid"></div>
+          <div class="distribution-grid" id="distribution-grid"></div>
+        </section>
+
+        <section id="reliability" class="section">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow" id="reliability-eyebrow">Reliability</p>
+            <h2 id="reliability-heading">Format adherence matters when the model has to generate structure.</h2>
+            <p id="reliability-copy">Invalid outputs were counted whenever generative responses failed the expected schema and had to be treated as incorrect.</p>
+          </div>
+
+          <div class="reliability-card" data-reveal>
+            <div class="reliability-copy">
+              <h3 id="reliability-card-heading">RAG stayed stable. Low-resource PEFT did not.</h3>
+              <p id="reliability-card-copy">The contrast in invalid outputs helps explain why raw model capability and usable system behaviour can diverge.</p>
+            </div>
+            <div class="reliability-grid" id="reliability-grid"></div>
+          </div>
+        </section>
+
+        <section id="thesis" class="section final-panel" data-reveal>
+          <div class="final-copy">
+            <p class="eyebrow" id="decision-eyebrow">Decision Guide</p>
+            <h2 id="decision-heading">Which model family makes sense in which situation?</h2>
+            <p id="decision-copy">The thesis does not end with a single winner. It ends with a selection rule: choose the model family that matches your data regime, task structure, and tolerance for output-format risk.</p>
+          </div>
+          <div class="finding-grid" id="finding-grid"></div>
+          <div class="final-actions">
+            <a class="button button-primary" id="decision-download" href="assets/arabic_sentiment_fyp_Final.pdf">
+              Open Thesis PDF
+            </a>
+            <a class="button button-secondary" id="decision-results" href="#results">
+              Jump To Results
+            </a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <p id="footer-copy">Designed as a live research demo for inspection day and future portfolio sharing.</p>
+      </footer>
+    </div>
+
+    <script src="data.js?v=20260326"></script>
+    <script src="app.js?v=20260326"></script>
+  </body>
+</html>
